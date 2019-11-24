@@ -18,7 +18,7 @@ use Anax\Commons\ContainerInjectableTrait;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class IpController implements ContainerInjectableInterface
+class IpGeoController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
@@ -42,6 +42,8 @@ class IpController implements ContainerInjectableInterface
     {
         // Use to initialise member variables.
         $this->db = "active";
+        $this->IpCheck = new IpCheck();
+        $this->IpCurl = new IpCurl();
     }
 
 
@@ -59,11 +61,24 @@ class IpController implements ContainerInjectableInterface
          $title = "Ip Validator";
 
          $page = $this->di->get("page");
-         // $session = $this->di->get("session");
 
-         // $active = $session->get(self::$key, null);
+         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+             //ip from share internet
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+         } elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+             //ip pass from proxy
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+         } else {
+             if (isset($_SERVER['REMOTE_ADDR'])) {
+                 $ip = $_SERVER['REMOTE_ADDR'];
+             } else {
+                 $ip = "8.8.8.8";
+             }
+         }
 
-         $page->add("anax/ipvalidator/index");
+         $page->add("anax/ipvalidatorgeo/index", [
+             "ip" => $ip,
+         ]);
 
          return $page->render([
              "title" => $title,
@@ -78,29 +93,35 @@ class IpController implements ContainerInjectableInterface
       */
      public function indexActionPost() : object
      {
-         $response = $this->di->get("response");
-         $request = $this->di->get("request");
-         $session = $this->di->get("session");
-         $ip = $request->getPost("ip");
+         $type = "null";
+         $ort = "null";
+         $country = "null";
          $domain = "Not found";
+         $request = $this->di->get("request");
 
-         if(filter_var($ip, FILTER_VALIDATE_IP)) {
-             if (gethostbyaddr($ip) != $ip) {
-                $domain = gethostbyaddr($ip);
-                $res = "`$ip` is a valid IP Adress. Domainname: $domain";
-            }
+         $ip = $request->getPost("ip");
+
+         if ($this->IpCheck->validateIp($ip)) {
+             $api_result = $this->IpCurl->curl($ip);
+             $type = $api_result['type'];
+             $ort = $api_result['region_name'];
+             $country = $api_result['country_name'];
+             $domain = $this->IpCheck->validateDomain($ip);
+             $res = "`$ip` is a valid IP Adress. Domainname: $domain";
          }
          else {
-             $res = "`$ip` is not a valid IP Adress. Domainname: $domain";
+             $res = "`$ip` is not a valid IP Adress. Domainname: Not found";
          }
-
 
          $title = "Ip Validator";
 
          $page = $this->di->get("page");
 
-         $page->add("anax/ipvalidator/result", [
+         $page->add("anax/ipvalidatorgeo/result", [
              "res" => $res,
+             "type" => $type,
+             "ort" => $ort,
+             "country" => $country,
          ]);
 
          return $page->render([

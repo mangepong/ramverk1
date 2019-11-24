@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Test the SampleController.
  */
-class IpValidatorTest extends TestCase
+class IpValidatorJsonTest extends TestCase
 {
 
 
@@ -19,7 +19,7 @@ class IpValidatorTest extends TestCase
         $di = $this->di;
         $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
         $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
-        $this->controller = new IpController();
+        $this->controller = new IpJsonController();
         $this->controller->setDI($this->di);
         $session = $di->get("session");
     }
@@ -43,20 +43,21 @@ class IpValidatorTest extends TestCase
         $this->assertIsObject($res);
     }
 
-    public function testIndexActionPostTrue()
+    public function testIndexActionGetTrue()
     {
         $request = $this->di->get("request");
         $response = $this->di->get("response");
         $this->di->set("response", "\Anax\Response\Response");
-        $request->setPost("ip", "8.8.8.8");
-        $res = $this->controller->indexActionPost();
-        $this->assertIsObject($res);
+        $request->setGet("ip", "8.8.8.8");
+        $this->controller->initialize();
+        $res = $this->controller->indexActionGet();
+        $this->assertIsArray($res);
     }
 
-    public function testIndexActionPostFalse()
-    {
-
-        $res = $this->controller->indexActionPost();
-        $this->assertIsObject($res);
+    public function testIndexActionGetFalse()
+    {   
+        $this->controller->initialize();
+        $res = $this->controller->indexActionGet();
+        $this->assertIsArray($res);
     }
 }
