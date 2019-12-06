@@ -3,9 +3,7 @@
 
 namespace Anax\Controller;
 
-
 class WeatherCurl
-
 {
 
     private $key;
@@ -23,7 +21,6 @@ class WeatherCurl
      */
 
     public function curl($lat, $long)
-
     {
         // $access_key = "c5d9fa305d5b063807a2cd9ff701c080";
         $url =  "https://api.darksky.net/forecast";
@@ -35,14 +32,20 @@ class WeatherCurl
         $mh = curl_multi_init();
         $chAll = [];
 
-        $newTime = date("Y-m-d", (strtotime("1 day", strtotime($date))));
+        $newdate = date('Y-m-d', (strtotime('1 day', strtotime($date))));
 
         $options = [
                 CURLOPT_RETURNTRANSFER => true,
         ];
 
+        if ($this->key) {
+            $key = $this->key;
+        } else {
+            $key = "c5d9fa305d5b063807a2cd9ff701c080";
+        }
+
         while ($days > 0) {
-            $ch = curl_init("$url/$this->key/$lat,$long,{$date}T$time");
+            $ch = curl_init("$url/$key/$lat,$long,{$date}T$time?units=si");
             curl_setopt_array($ch, $options);
             curl_multi_add_handle($mh, $ch);
             $chAll[] = $ch;
@@ -64,13 +67,10 @@ class WeatherCurl
         $res = [];
 
         foreach ($chAll as $ch) {
-
             $data = curl_multi_getcontent($ch);
 
             $res[] = json_decode($data, true);
-
         }
         return $res;
     }
-
 }

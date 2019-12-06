@@ -66,8 +66,7 @@ class IpGeoJsonController implements ContainerInjectableInterface
                 "ort" => $ort,
                 "country" => $country,
             ];
-        }
-        else {
+        } else {
             $json = [
                 "valid" => "False",
                 "ip" => $ip,

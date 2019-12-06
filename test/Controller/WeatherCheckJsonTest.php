@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Test the SampleController.
  */
-class IpValidatorJsonTest extends TestCase
+class WeatherCheckJsonTest extends TestCase
 {
 
 
@@ -19,7 +19,7 @@ class IpValidatorJsonTest extends TestCase
         $di = $this->di;
         $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
         $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
-        $this->controller = new IpJsonController();
+        $this->controller = new WeatherCheckJsonController();
         $this->controller->setDI($this->di);
         $session = $di->get("session");
     }
@@ -28,28 +28,18 @@ class IpValidatorJsonTest extends TestCase
      */
     public function testIndexAction()
     {
-        global $di;
-
-        $di = new DIFactoryConfig();
-        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
-
-        $di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
-
-        $controller = new IpController();
-        $controller->setDI($di);
-        $controller->initialize();
-
-        $res = $controller->indexAction();
-        $this->assertIsObject($res);
+        $this->controller->initialize();
+        $res = $this->controller->indexActionGet();
+        $this->assertIsArray($res);
     }
 
     public function testIndexActionGetTrue()
     {
         $request = $this->di->get("request");
         $response = $this->di->get("response");
+        $this->controller->initialize();
         $this->di->set("response", "\Anax\Response\Response");
         $request->setGet("ip", "8.8.8.8");
-        $this->controller->initialize();
         $res = $this->controller->indexActionGet();
         $this->assertIsArray($res);
     }

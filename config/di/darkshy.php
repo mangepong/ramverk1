@@ -6,15 +6,15 @@ return [
 
     // Services to add to the container.
     "services" => [
-        "content" => [
+        "darksky" => [
             "shared" => true,
             "callback" => function () {
                 $darkshy = new \Anax\Controller\WeatherCurl();
                 $cfg = $this->get("configuration");
                 $config = $cfg->load("api_keys.php");
-                $darkshy->setKey($config['config']['key']);
+                $darksky->setKey($config['config']['key']);
 
-                return $darkshy;
+                return $darksky;
             }
         ],
     ],

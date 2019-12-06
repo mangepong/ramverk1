@@ -3,9 +3,7 @@
 
 namespace Anax\Controller;
 
-
 class IpCheck
-
 {
 
 
@@ -17,7 +15,6 @@ class IpCheck
      */
 
     public function validateIp($ip)
-
     {
         if (filter_var($ip, FILTER_VALIDATE_IP)) {
             return true;
@@ -33,7 +30,6 @@ class IpCheck
      */
 
     public function validateDomain($ip)
-
     {
 
         if ($this->validateIp($ip)) {

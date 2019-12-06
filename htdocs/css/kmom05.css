@@ -28,6 +28,9 @@ body {
 /**
  * Render the `main` element consistently in IE.
  */
+
+#mapid { height: 250px; }
+
 main {
   display: block;
 }

@@ -54,21 +54,21 @@ class IpController implements ContainerInjectableInterface
      *
      * @return string
      */
-     public function indexAction() : object
-     {
-         $title = "Ip Validator";
+    public function indexAction() : object
+    {
+        $title = "Ip Validator";
 
-         $page = $this->di->get("page");
-         // $session = $this->di->get("session");
+        $page = $this->di->get("page");
+        // $session = $this->di->get("session");
 
-         // $active = $session->get(self::$key, null);
+        // $active = $session->get(self::$key, null);
 
-         $page->add("anax/ipvalidator/index");
+        $page->add("anax/ipvalidator/index");
 
-         return $page->render([
-             "title" => $title,
-         ]);
-     }
+        return $page->render([
+            "title" => $title,
+        ]);
+    }
 
 
      /**
@@ -76,36 +76,34 @@ class IpController implements ContainerInjectableInterface
       *
       * @return object
       */
-     public function indexActionPost() : object
-     {
-         $response = $this->di->get("response");
-         $request = $this->di->get("request");
-         $session = $this->di->get("session");
-         $ip = $request->getPost("ip");
-         $domain = "Not found";
+    public function indexActionPost() : object
+    {
+        $response = $this->di->get("response");
+        $request = $this->di->get("request");
+        $session = $this->di->get("session");
+        $ip = $request->getPost("ip");
+        $domain = "Not found";
 
-         if(filter_var($ip, FILTER_VALIDATE_IP)) {
-             if (gethostbyaddr($ip) != $ip) {
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            if (gethostbyaddr($ip) != $ip) {
                 $domain = gethostbyaddr($ip);
                 $res = "`$ip` is a valid IP Adress. Domainname: $domain";
             }
-         }
-         else {
-             $res = "`$ip` is not a valid IP Adress. Domainname: $domain";
-         }
+        } else {
+            $res = "`$ip` is not a valid IP Adress. Domainname: $domain";
+        }
 
 
-         $title = "Ip Validator";
+        $title = "Ip Validator";
 
-         $page = $this->di->get("page");
+        $page = $this->di->get("page");
 
-         $page->add("anax/ipvalidator/result", [
-             "res" => $res,
-         ]);
+        $page->add("anax/ipvalidator/result", [
+            "res" => $res,
+        ]);
 
-         return $page->render([
-             "title" => $title,
-         ]);
-     }
-
+        return $page->render([
+            "title" => $title,
+        ]);
+    }
 }

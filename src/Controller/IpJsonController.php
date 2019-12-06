@@ -50,17 +50,16 @@ class IpJsonController implements ContainerInjectableInterface
         $ip = $request->getGet("ip");
         $domain = "Not found";
 
-        if(filter_var($ip, FILTER_VALIDATE_IP)) {
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
             if (gethostbyaddr($ip) != $ip) {
-               $domain = gethostbyaddr($ip);
-           }
+                $domain = gethostbyaddr($ip);
+            }
             $json = [
                 "valid" => "True",
                 "ip" => $ip,
                 "domain" => $domain,
             ];
-        }
-        else {
+        } else {
             $json = [
                 "valid" => "False",
                 "ip" => $ip,

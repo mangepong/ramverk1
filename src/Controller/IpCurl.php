@@ -3,9 +3,7 @@
 
 namespace Anax\Controller;
 
-
 class IpCurl
-
 {
 
     /**
@@ -15,7 +13,6 @@ class IpCurl
      */
 
     public function curl($ip)
-
     {
 
 
@@ -37,7 +34,5 @@ class IpCurl
         // Decode the JSON response:
         $api_result = json_decode($json, true);
         return $api_result;
-
     }
-
 }

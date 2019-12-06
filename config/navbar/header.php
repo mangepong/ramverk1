@@ -58,5 +58,10 @@ return [
             "url" => "ipvalidatorgeo",
             "title" => "Ip Validator with Geo",
         ],
+        [
+            "text" => "Weather Check",
+            "url" => "weather",
+            "title" => "Weather Check",
+        ],
     ],
 ];

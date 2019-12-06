@@ -18,7 +18,7 @@ use Anax\Commons\ContainerInjectableTrait;
 *
 * @SuppressWarnings(PHPMD.TooManyPublicMethods)
 */
-class IpGeoController implements ContainerInjectableInterface
+class WeatherCheckController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
@@ -42,8 +42,8 @@ class IpGeoController implements ContainerInjectableInterface
     {
         // Use to initialise member variables.
         $this->db = "active";
-        $this->IpCheck = new IpCheck();
         $this->IpCurl = new IpCurl();
+        $this->WeatherCurl = new WeatherCurl();
     }
 
 
@@ -58,13 +58,15 @@ class IpGeoController implements ContainerInjectableInterface
     */
     public function indexAction() : object
     {
-        $title = "Ip Validator";
+        $title = "Weather Check";
 
         $page = $this->di->get("page");
 
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            //ip from share internet
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            //ip pass from proxy
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
             if (isset($_SERVER['REMOTE_ADDR'])) {
@@ -74,7 +76,7 @@ class IpGeoController implements ContainerInjectableInterface
             }
         }
 
-        $page->add("anax/ipvalidatorgeo/index", [
+        $page->add("anax/weather/index", [
             "ip" => $ip,
         ]);
 
@@ -84,41 +86,37 @@ class IpGeoController implements ContainerInjectableInterface
     }
 
 
-    /**
-    * Update current selected style.
-    *
-    * @return object
-    */
-    public function indexActionPost() : object
+    public function indexActionPost()
     {
-        $type = "null";
-        $ort = "null";
-        $country = "null";
-        $domain = "Not found";
+        $response = $this->di->get("response");
         $request = $this->di->get("request");
-
+        $session = $this->di->get("session");
         $ip = $request->getPost("ip");
 
-        if ($this->IpCheck->validateIp($ip)) {
-            $api_result = $this->IpCurl->curl($ip);
-            $type = $api_result['type'];
-            $ort = $api_result['region_name'];
-            $country = $api_result['country_name'];
-            $domain = $this->IpCheck->validateDomain($ip);
-            $res = "`$ip` is a valid IP Adress. Domainname: $domain";
+        $ipres = $this->IpCurl->curl($ip);
+        $lat = $ipres["latitude"];
+        $long = $ipres["longitude"];
+        $weatherres = $this->WeatherCurl->curl($lat, $long);
+
+        if (isset($weatherres[0]["daily"])) {
+            $res = $weatherres;
         } else {
-            $res = "`$ip` is not a valid IP Adress. Domainname: Not found";
+            $jsonres = [
+                "Message" => "No data found for this location!",
+            ];
+            return [$jsonres];
         }
 
-        $title = "Ip Validator";
+
+
+        $title = "Weather Check";
 
         $page = $this->di->get("page");
 
-        $page->add("anax/ipvalidatorgeo/result", [
+        $page->add("anax/weather/result", [
             "res" => $res,
-            "type" => $type,
-            "ort" => $ort,
-            "country" => $country,
+            "lat" => $lat,
+            "long" => $long,
         ]);
 
         return $page->render([

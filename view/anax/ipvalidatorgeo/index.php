@@ -2,7 +2,6 @@
 
 namespace Anax\View;
 
-
 ?><h1>Ip Validator</h1>
 <form class="stylechooser" method="post">
     <fieldset>
