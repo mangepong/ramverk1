@@ -9,9 +9,9 @@ return [
         "darksky" => [
             "shared" => true,
             "callback" => function () {
-                $darkshy = new \Anax\Controller\WeatherCurl();
+                $darksky = new \Anax\Controller\WeatherCurl();
                 $cfg = $this->get("configuration");
-                $config = $cfg->load("api_keys.php");
+                $config = $cfg->load("api.php");
                 $darksky->setKey($config['config']['key']);
 
                 return $darksky;
