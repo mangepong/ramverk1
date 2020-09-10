@@ -17,8 +17,8 @@ class WeatherCheckTest extends TestCase
         global $di;
         $this->di = new DIFactoryConfig();
         $di = $this->di;
-        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
-        $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
+        $di->loadServices(ANAX_INSTALL_PATH . "/test/config/di");
+        // $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
         $this->controller = new WeatherCheckController();
         $this->controller->setDI($this->di);
         $session = $di->get("session");
@@ -47,10 +47,10 @@ class WeatherCheckTest extends TestCase
     // public function testIndexActionPostFalse()
     // {
     //     $this->controller->initialize();
-    //     // $request = $this->di->get("request");
-    //     // $response = $this->di->get("response");
-    //     // $this->di->set("response", "\Anax\Response\Response");
-    //     // $request->setPost("ip", "8.8.8.8.1");
+    //     $request = $this->di->get("request");
+    //     $response = $this->di->get("response");
+    //     $this->di->set("response", "\Anax\Response\Response");
+    //     $request->setPost("ip", "8.8.8.8.1");
     //     $res = $this->controller->indexActionPost();
     //     $this->assertIsObject($res);
     // }

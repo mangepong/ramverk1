@@ -17,8 +17,9 @@ class IpValidatorTest extends TestCase
         global $di;
         $this->di = new DIFactoryConfig();
         $di = $this->di;
-        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
-        $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
+        // $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
+        $di->loadServices(ANAX_INSTALL_PATH . "/test/config/di");
+        // $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/cache");
         $this->controller = new IpController();
         $this->controller->setDI($this->di);
         $session = $di->get("session");
@@ -31,9 +32,10 @@ class IpValidatorTest extends TestCase
         global $di;
 
         $di = new DIFactoryConfig();
-        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
+        // $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
+        $di->loadServices(ANAX_INSTALL_PATH . "/test/config/di");
 
-        $di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
+        // $di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
 
         $controller = new IpController();
         $controller->setDI($di);

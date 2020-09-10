@@ -17,8 +17,8 @@ class IpGeoValidatorJsonTest extends TestCase
         global $di;
         $this->di = new DIFactoryConfig();
         $di = $this->di;
-        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
-        $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
+        $di->loadServices(ANAX_INSTALL_PATH . "/test/config/di");
+        // $di->get('cache')->setPath(ANAX_INSTALL_PATH . "/test/cache");
         $this->controller = new IpGeoJsonController();
         $this->controller->setDI($this->di);
         $session = $di->get("session");
