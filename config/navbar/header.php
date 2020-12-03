@@ -63,5 +63,10 @@ return [
             "url" => "weather",
             "title" => "Weather Check",
         ],
+        [
+            "text" => "Book",
+            "url" => "book",
+            "title" => "Book",
+        ],
     ],
 ];
